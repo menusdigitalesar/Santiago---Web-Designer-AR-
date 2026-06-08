@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<title>Carousel — Santiago Web Designer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+  background:#03040a;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  min-height:100vh;
+  font-family:'Inter',sans-serif;
+  gap:18px;
+  padding:22px 0 48px;
+}
+.controls {
+  display:flex;
+  gap:12px;
+  align-items:center;
+}
+.controls button {
+  background:#1a2035;
+  border:1px solid #ffffff15;
+  color:#fff;
+  padding:8px 20px;
+  border-radius:8px;
+  cursor:pointer;
+  font-family:'Inter',sans-serif;
+  font-size:13px;
+}
+.controls button:hover { background:#252d45; }
+#ctr { font-size:13px; color:#ffffff50; }
+
+.slide-wrapper {
+  width:540px;
+  height:540px;
+  position:relative;
+  overflow:hidden;
+  border-radius:6px;
+  box-shadow:0 0 60px #6366f115;
+}
+.slide {
+  width:1080px;
+  height:1080px;
+  position:absolute;
+  top:0; left:0;
+  transform:scale(0.5);
+  transform-origin:top left;
+  display:none;
+  flex-direction:column;
+  overflow:hidden;
+}
+.slide.active { display:flex; }
+
+/* ── Shared bg layers ── */
+.bg-grid {
+  position:absolute;
+  inset:0;
+  background-image:
+    linear-gradient(rgba(99,102,241,0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(99,102,241,0.04) 1px, transparent 1px);
+  background-size:80px 80px;
+}
+.bg-glow {
+  position:absolute;
+  border-radius:50%;
+  filter:blur(120px);
+  pointer-events:none;
+}
+
+/* ── Inner content ── */
+.si {
+  width:100%;
+  height:100%;
+  padding:80px 84px;
+  display:flex;
+  flex-direction:column;
+  position:relative;
+  z-index:2;
+}
+.num {
+  position:absolute;
+  top:72px; right:84px;
+  font-size:26px;
+  color:#ffffff18;
+  font-weight:600;
+  letter-spacing:2px;
+}
+.lbl {
+  font-size:22px;
+  font-weight:700;
+  letter-spacing:3px;
+  text-transform:uppercase;
+  margin-bottom:56px;
+}
+.bot {
+  position:absolute;
+  bottom:68px; left:84px; right:84px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  z-index:3;
+}
+.bot-url { font-size:22px; color:#ffffff25; font-weight:500; }
+.bot-mark {
+  width:68px; height:68px;
+  background:linear-gradient(135deg,#6366f1,#8b5cf6);
+  border-radius:14px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:28px;
+  font-weight:900;
+  color:#fff;
+  box-shadow:0 0 30px #6366f140;
+}
+
+/* Decorative corner accent line */
+.corner-lines {
+  position:absolute;
+  top:0; right:0;
+  width:200px; height:200px;
+  pointer-events:none;
+}
+.corner-lines::before {
+  content:'';
+  position:absolute;
+  top:52px; right:0;
+  width:140px; height:1.5px;
+  background:linear-gradient(90deg,transparent,#6366f130);
+}
+.corner-lines::after {
+  content:'';
+  position:absolute;
+  top:0; right:52px;
+  width:1.5px; height:140px;
+  background:linear-gradient(180deg,transparent,#6366f130);
+}
+
+/* ══ S1: Hook ══ */
+#s1 { background:#0a0d1a; }
+#s1 .bg-glow.a { width:700px; height:500px; background:#6366f1; opacity:0.07; top:-100px; left:-150px; }
+#s1 .bg-glow.b { width:400px; height:400px; background:#8b5cf6; opacity:0.06; bottom:-80px; right:-80px; }
+#s1 .lbl { color:#818cf8; }
+.s1-q {
+  font-size:96px;
+  font-weight:900;
+  color:#fff;
+  line-height:1.02;
+  max-width:640px;
+  margin-bottom:auto;
+  text-shadow:0 0 80px #6366f120;
+}
+.s1-q em { color:#8b5cf6; font-style:normal; }
+.s1-card {
+  position:absolute;
+  right:80px; top:155px;
+  width:290px; height:290px;
+  background:#111828;
+  border:1.5px solid #6366f120;
+  border-radius:28px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:18px;
+  box-shadow:0 0 40px #6366f10a, inset 0 1px 0 #ffffff08;
+}
+.s1-avatar {
+  width:88px; height:88px;
+  background:#1d2a48;
+  border-radius:50%;
+  border:2px solid #6366f115;
+}
+.s1-lines { display:flex; flex-direction:column; gap:10px; }
+.s1-line { height:11px; background:#1a2640; border-radius:6px; }
+.s1-badge {
+  background:linear-gradient(135deg,#6366f1,#8b5cf6);
+  color:#fff;
+  font-size:18px;
+  font-weight:800;
+  padding:9px 24px;
+  border-radius:9px;
+  letter-spacing:1px;
+  box-shadow:0 4px 20px #6366f140;
+}
+.s1-sub {
+  font-size:29px;
+  color:#ffffff38;
+  font-weight:500;
+  padding-bottom:116px;
+}
+
+/* ══ S2: Realidad ══ */
+#s2 { background:#0a0d1a; }
+#s2 .bg-glow.a { width:500px; height:400px; background:#f97316; opacity:0.05; top:-60px; right:-100px; }
+#s2 .bg-glow.b { width:600px; height:300px; background:#6366f1; opacity:0.04; bottom:-60px; left:-60px; }
+#s2 .lbl { color:#fb923c; }
+.s2-pre {
+  font-size:36px;
+  color:#ffffffa0;
+  font-weight:500;
+  border-left:5px solid #f97316;
+  padding-left:28px;
+  margin-bottom:28px;
+}
+.s2-brutal {
+  font-size:100px;
+  font-weight:900;
+  color:#fff;
+  line-height:1.0;
+  margin-bottom:44px;
+}
+.s2-body {
+  font-size:40px;
+  color:#ffffffb0;
+  font-weight:500;
+  line-height:1.35;
+  max-width:820px;
+  margin-bottom:48px;
+}
+.s2-body b { color:#f97316; font-weight:700; }
+.s2-tags { display:flex; gap:16px; flex-wrap:wrap; }
+.s2-tag {
+  font-size:22px;
+  font-weight:600;
+  padding:10px 24px;
+  border-radius:40px;
+  border:1.5px solid #ffffff10;
+  color:#ffffff40;
+  background:#ffffff04;
+}
+
+/* ══ S3: Diagnóstico ══ */
+#s3 { background:#0a0d1a; }
+#s3 .bg-glow.a { width:800px; height:600px; background:#6366f1; opacity:0.06; top:50%; left:50%; transform:translate(-50%,-50%); }
+#s3 .lbl { color:#818cf8; }
+.s3-a {
+  font-size:80px;
+  font-weight:900;
+  color:#ffffff65;
+  line-height:1.1;
+  margin-bottom:8px;
+}
+.s3-a b { color:#fff; }
+.s3-divider {
+  width:90px; height:4px;
+  background:linear-gradient(90deg,#6366f1,#8b5cf6);
+  border-radius:2px;
+  margin:38px 0;
+  box-shadow:0 0 20px #6366f160;
+}
+.s3-b {
+  font-size:94px;
+  font-weight:900;
+  color:#fff;
+  line-height:1.0;
+}
+.s3-b em { color:#818cf8; font-style:normal; }
+
+/* ══ S4: Contraste ══ */
+#s4 { background:#0a0d1a; }
+#s4 .bg-glow.a { width:400px; height:400px; background:#6366f1; opacity:0.07; bottom:-60px; right:-60px; }
+#s4 .lbl { color:#818cf8; }
+.s4-hl {
+  font-size:66px;
+  font-weight:900;
+  color:#fff;
+  line-height:1.1;
+  margin-bottom:52px;
+  max-width:660px;
+}
+.s4-cards { display:flex; gap:28px; flex:1; padding-bottom:110px; }
+.s4-card {
+  flex:1;
+  border-radius:26px;
+  padding:48px 40px;
+  display:flex;
+  flex-direction:column;
+  gap:16px;
+}
+.s4-card.dim {
+  background:#0e1524;
+  border:1.5px solid #ffffff08;
+}
+.s4-card.lit {
+  background:#131d3a;
+  border:1.5px solid #6366f130;
+  box-shadow:0 0 40px #6366f110, inset 0 1px 0 #6366f118;
+}
+.s4-icon { font-size:50px; }
+.s4-clabel { font-size:23px; font-weight:700; letter-spacing:1px; }
+.s4-card.dim .s4-clabel { color:#ffffff35; }
+.s4-card.lit .s4-clabel { color:#818cf8; }
+.s4-cbig { font-size:58px; font-weight:900; line-height:1.0; }
+.s4-card.dim .s4-cbig { color:#ffffff60; }
+.s4-card.lit .s4-cbig { color:#6366f1; text-shadow:0 0 30px #6366f150; }
+.s4-cdesc { font-size:24px; line-height:1.4; font-weight:400; }
+.s4-card.dim .s4-cdesc { color:#ffffff35; }
+.s4-card.lit .s4-cdesc { color:#ffffffa0; }
+
+/* ══ S5: Referencia ══ */
+#s5 { background:#0a0d1a; }
+#s5 .bg-glow.a { width:500px; height:300px; background:#f97316; opacity:0.05; top:-40px; right:-80px; }
+#s5 .bg-glow.b { width:500px; height:300px; background:#6366f1; opacity:0.06; bottom:100px; left:-100px; }
+#s5 .lbl { color:#fb923c; }
+.s5-hl {
+  font-size:76px;
+  font-weight:900;
+  color:#fff;
+  line-height:1.05;
+  margin-bottom:16px;
+  max-width:780px;
+}
+.s5-sub {
+  font-size:40px;
+  color:#ffffffb0;
+  font-weight:500;
+  margin-bottom:52px;
+  line-height:1.3;
+}
+.s5-sub b { color:#f97316; font-weight:700; }
+.s5-grid {
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:20px;
+  padding-bottom:110px;
+}
+.s5-gcard {
+  background:#0e1524;
+  border:1.5px solid #ffffff08;
+  border-radius:22px;
+  padding:34px 36px;
+  display:flex;
+  align-items:center;
+  gap:22px;
+}
+.s5-dot {
+  width:16px; height:16px;
+  border-radius:50%;
+  flex-shrink:0;
+}
+.s5-dot.ind { background:linear-gradient(135deg,#6366f1,#8b5cf6); box-shadow:0 0 12px #6366f160; }
+.s5-dot.org { background:#f97316; box-shadow:0 0 12px #f9731660; }
+.s5-gcard p { font-size:28px; font-weight:700; color:#fff; line-height:1.2; }
+
+/* ══ S6: CTA ══ */
+#s6 { background:#0a0d1a; }
+#s6 .bg-glow.a { width:900px; height:700px; background:#6366f1; opacity:0.08; top:50%; left:50%; transform:translate(-50%,-50%); }
+#s6 .lbl { color:#818cf8; }
+.s6-hl {
+  font-size:108px;
+  font-weight:900;
+  color:#fff;
+  line-height:1.0;
+  margin-bottom:28px;
+  text-shadow:0 0 80px #6366f120;
+}
+.s6-hl em { color:#818cf8; font-style:normal; }
+.s6-sub {
+  font-size:38px;
+  color:#ffffff65;
+  font-weight:500;
+  margin-bottom:56px;
+  line-height:1.4;
+}
+.s6-btn {
+  display:inline-flex;
+  align-items:center;
+  gap:16px;
+  background:linear-gradient(135deg,#6366f1,#8b5cf6);
+  color:#fff;
+  font-size:36px;
+  font-weight:800;
+  padding:30px 56px;
+  border-radius:20px;
+  margin-bottom:40px;
+  width:fit-content;
+  box-shadow:0 8px 40px #6366f145;
+}
+.s6-handle { font-size:28px; color:#818cf8; font-weight:700; letter-spacing:1px; }
+</style>
+</head>
+<body>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+<div class="controls">
+  <button onclick="prev()">← Anterior</button>
+  <span id="ctr">1 / 6</span>
+  <button onclick="next()">Siguiente →</button>
+  <button onclick="downloadSlide()" style="background:linear-gradient(135deg,#6366f1,#8b5cf6);border:none;font-weight:700;">
+    ⬇ Descargar slide
+  </button>
+  <button onclick="downloadAll()" style="background:#1a2035;border:1px solid #6366f140;font-weight:600;">
+    ⬇ Descargar todos
+  </button>
+</div>
+
+<!-- S1 -->
+<div class="slide-wrapper">
+<div class="slide active" id="s1">
+  <div class="bg-grid"></div>
+  <div class="bg-glow a"></div>
+  <div class="bg-glow b"></div>
+  <div class="corner-lines"></div>
+  <div class="si">
+    <div class="num">01 / 06</div>
+    <div class="lbl">La pregunta incómoda</div>
+    <div class="s1-q">¿Tu negocio<br/>existe en<br/><em>internet?</em></div>
+    <div class="s1-card">
+      <div class="s1-avatar"></div>
+      <div class="s1-lines">
+        <div class="s1-line" style="width:140px"></div>
+        <div class="s1-line" style="width:100px"></div>
+      </div>
+      <div class="s1-badge">SIN WEB</div>
+    </div>
+    <div class="s1-sub">Si la respuesta es no,<br/>seguí leyendo.</div>
+    <div class="bot"><span class="bot-url">@webdesigner.ar</span><div class="bot-mark">S</div></div>
+  </div>
+</div>
+</div>
+
+<!-- S2 -->
+<div class="slide-wrapper" style="display:none" id="w2">
+<div class="slide" id="s2">
+  <div class="bg-grid"></div>
+  <div class="bg-glow a"></div>
+  <div class="bg-glow b"></div>
+  <div class="corner-lines"></div>
+  <div class="si">
+    <div class="num">02 / 06</div>
+    <div class="lbl">La realidad</div>
+    <div class="s2-pre">La mayoría diría que sí.</div>
+    <div class="s2-brutal">Pero la<br/>realidad<br/>es brutal:</div>
+    <div class="s2-body">Sin web, estás regalando clientes<br/>a tu competencia <b>todos los días.</b></div>
+    <div class="s2-tags">
+      <div class="s2-tag">Sin presencia</div>
+      <div class="s2-tag">Sin credibilidad</div>
+      <div class="s2-tag">Sin clientes nuevos</div>
+    </div>
+    <div class="bot"><span class="bot-url">@webdesigner.ar</span><div class="bot-mark">S</div></div>
+  </div>
+</div>
+</div>
+
+<!-- S3 -->
+<div class="slide-wrapper" style="display:none" id="w3">
+<div class="slide" id="s3">
+  <div class="bg-grid"></div>
+  <div class="bg-glow a"></div>
+  <div class="corner-lines"></div>
+  <div class="si">
+    <div class="num">03 / 06</div>
+    <div class="lbl">El diagnóstico</div>
+    <div class="s3-a">Solo tienen<br/><b>redes sociales.</b></div>
+    <div class="s3-divider"></div>
+    <div class="s3-b">Y ese error cuesta<br/>muchísimo más<br/><em>de lo que creen.</em></div>
+    <div class="bot"><span class="bot-url">@webdesigner.ar</span><div class="bot-mark">S</div></div>
+  </div>
+</div>
+</div>
+
+<!-- S4 -->
+<div class="slide-wrapper" style="display:none" id="w4">
+<div class="slide" id="s4">
+  <div class="bg-grid"></div>
+  <div class="bg-glow a"></div>
+  <div class="corner-lines"></div>
+  <div class="si">
+    <div class="num">04 / 06</div>
+    <div class="lbl">Los que crecen</div>
+    <div class="s4-hl">La diferencia<br/>está en esto:</div>
+    <div class="s4-cards">
+      <div class="s4-card dim">
+        <div class="s4-icon">👁</div>
+        <div class="s4-clabel">Sin web</div>
+        <div class="s4-cbig">Visitas.</div>
+        <div class="s4-cdesc">Te ven en redes, te scrollean y te olvidan.</div>
+      </div>
+      <div class="s4-card lit">
+        <div class="s4-icon">🧠</div>
+        <div class="s4-clabel">Con web</div>
+        <div class="s4-cbig">CLIENTES.</div>
+        <div class="s4-cdesc">Te encuentran cuando te buscan y te eligen a vos.</div>
+      </div>
+    </div>
+    <div class="bot"><span class="bot-url">@webdesigner.ar</span><div class="bot-mark">S</div></div>
+  </div>
+</div>
+</div>
+
+<!-- S5 -->
+<div class="slide-wrapper" style="display:none" id="w5">
+<div class="slide" id="s5">
+  <div class="bg-grid"></div>
+  <div class="bg-glow a"></div>
+  <div class="bg-glow b"></div>
+  <div class="corner-lines"></div>
+  <div class="si">
+    <div class="num">05 / 06</div>
+    <div class="lbl">El estándar</div>
+    <div class="s5-hl">Los negocios que<br/>más venden tienen<br/>algo en común.</div>
+    <div class="s5-sub">Una web que trabaja<br/><b>24/7 por ellos.</b></div>
+    <div class="s5-grid">
+      <div class="s5-gcard"><div class="s5-dot ind"></div><p>Primeros<br/>en Google</p></div>
+      <div class="s5-gcard"><div class="s5-dot ind"></div><p>Credibilidad<br/>inmediata</p></div>
+      <div class="s5-gcard"><div class="s5-dot org"></div><p>Disponibles<br/>las 24 horas</p></div>
+      <div class="s5-gcard"><div class="s5-dot org"></div><p>Más ventas,<br/>menos esfuerzo</p></div>
+    </div>
+    <div class="bot"><span class="bot-url">@webdesigner.ar</span><div class="bot-mark">S</div></div>
+  </div>
+</div>
+</div>
+
+<!-- S6 -->
+<div class="slide-wrapper" style="display:none" id="w6">
+<div class="slide" id="s6">
+  <div class="bg-grid"></div>
+  <div class="bg-glow a"></div>
+  <div class="corner-lines"></div>
+  <div class="si">
+    <div class="num">06 / 06</div>
+    <div class="lbl">La solución</div>
+    <div class="s6-hl">Tu web en<br/>menos de<br/><em>7 días.</em></div>
+    <div class="s6-sub">Para restaurantes, barberías,<br/>gimnasios y más negocios locales.</div>
+    <div class="s6-btn">💬 &nbsp;Escribime por WhatsApp</div>
+    <div class="s6-handle">@webdesigner.ar · Santiago Web Designer</div>
+    <div class="bot"><span class="bot-url">@webdesigner.ar</span><div class="bot-mark">S</div></div>
+  </div>
+</div>
+</div>
+
+<script>
+const total = 6;
+let cur = 1;
+function show(n) {
+  document.querySelectorAll('.slide').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.slide-wrapper').forEach(w => w.style.display = 'none');
+  const w = n === 1 ? document.querySelector('.slide-wrapper') : document.getElementById('w'+n);
+  w.style.display = 'block';
+  document.getElementById('s'+n).classList.add('active');
+  document.getElementById('ctr').textContent = n + ' / ' + total;
+  cur = n;
+}
+function next() { if (cur < total) show(cur + 1); }
+function prev() { if (cur > 1) show(cur - 1); }
+document.querySelector('.slide-wrapper').style.display = 'block';
+
+async function captureSlide(n) {
+  show(n);
+  await new Promise(r => setTimeout(r, 150));
+  const slide = document.getElementById('s' + n);
+
+  // Sacar scale para que html2canvas lea 1080×1080 real
+  slide.style.transform = 'none';
+  slide.style.position = 'fixed';
+  slide.style.top = '0';
+  slide.style.left = '0';
+  slide.style.zIndex = '9999';
+  await new Promise(r => setTimeout(r, 120));
+
+  const canvas = await html2canvas(slide, {
+    width: 1080, height: 1080, scale: 1,
+    useCORS: true, allowTaint: true,
+    backgroundColor: '#0a0d1a', logging: false
+  });
+
+  // Restaurar
+  slide.style.transform = '';
+  slide.style.position = '';
+  slide.style.top = '';
+  slide.style.left = '';
+  slide.style.zIndex = '';
+
+  return { canvas, n };
+}
+
+async function downloadSlide() {
+  const { canvas, n } = await captureSlide(cur);
+  const a = document.createElement('a');
+  a.download = 'slide-0' + n + '.png';
+  a.href = canvas.toDataURL('image/png');
+  a.click();
+}
+
+async function downloadAll() {
+  const btn = event.target;
+  btn.textContent = 'Descargando...';
+  btn.disabled = true;
+  for (let i = 1; i <= total; i++) {
+    const { canvas } = await captureSlide(i);
+    const a = document.createElement('a');
+    a.download = 'slide-0' + i + '.png';
+    a.href = canvas.toDataURL('image/png');
+    a.click();
+    await new Promise(r => setTimeout(r, 400));
+  }
+  btn.textContent = '⬇ Descargar todos';
+  btn.disabled = false;
+  show(1);
+}
+</script>
+</body>
+</html>

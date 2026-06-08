@@ -1,0 +1,65 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 800" width="800" height="800">
+  <defs>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@900&amp;display=swap');
+    </style>
+    <linearGradient id="gAccent" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%"   stop-color="#6366f1"/>
+      <stop offset="100%" stop-color="#8b5cf6"/>
+    </linearGradient>
+    <linearGradient id="gLine" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%"   stop-color="#6366f1" stop-opacity="0"/>
+      <stop offset="20%"  stop-color="#6366f1"/>
+      <stop offset="80%"  stop-color="#8b5cf6"/>
+      <stop offset="100%" stop-color="#8b5cf6" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="800" height="800" fill="#030712"/>
+
+  <!-- ROW 1: WEB + tablet icon -->
+  <text x="118" y="388"
+    font-family="'Barlow Condensed', Impact, 'Arial Narrow', sans-serif"
+    font-weight="900" font-size="138" letter-spacing="-2">
+    <tspan fill="url(#gAccent)">W</tspan><tspan fill="#ffffff">EB</tspan>
+  </text>
+
+  <!-- Tablet icon — same skew/size, indigo border, white fill -->
+  <g transform="translate(418, 335) skewX(-10)">
+    <rect x="-40" y="-58" width="86" height="106" rx="14" fill="none" stroke="#6366f1" stroke-width="4.5"/>
+    <rect x="-28" y="-46" width="62" height="82" rx="9" fill="#ffffff"/>
+  </g>
+
+  <!-- Separator: thick white + thin indigo -->
+  <rect x="118" y="401" width="548" height="5"   rx="2.5" fill="#ffffff"/>
+  <rect x="118" y="410" width="548" height="2.5" rx="1.5" fill="url(#gAccent)"/>
+
+  <!-- ROW 2: DESIGN -->
+  <text x="118" y="510"
+    font-family="'Barlow Condensed', Impact, 'Arial Narrow', sans-serif"
+    font-weight="900" font-size="162" letter-spacing="-2"
+    fill="#ffffff">DESIGN</text>
+
+  <!-- AR oval badge -->
+  <ellipse cx="706" cy="494" rx="55" ry="33" fill="none" stroke="url(#gAccent)" stroke-width="3.5"/>
+  <text x="706" y="506"
+    text-anchor="middle"
+    font-family="'Barlow Condensed', Impact, 'Arial Narrow', sans-serif"
+    font-weight="900" font-size="34" letter-spacing="2"
+    fill="url(#gAccent)">AR</text>
+
+  <!-- Separator below DESIGN -->
+  <rect x="118" y="525" width="548" height="2.5" rx="1.5" fill="url(#gAccent)"/>
+
+  <!-- ROW 3: SANTIAGO with brackets -->
+  <path d="M124 535 Q113 560 124 585"
+    stroke="url(#gAccent)" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+
+  <text x="140" y="584"
+    font-family="'Barlow Condensed', Impact, 'Arial Narrow', sans-serif"
+    font-weight="900" font-size="62" letter-spacing="2.5"
+    fill="#ffffff">SANTIAGO</text>
+
+  <path d="M469 535 Q480 560 469 585"
+    stroke="url(#gAccent)" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+</svg>

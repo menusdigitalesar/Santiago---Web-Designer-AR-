@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<title>Carousel 3 — Santiago Web Designer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+  background:#03040a; display:flex; flex-direction:column;
+  align-items:center; min-height:100vh;
+  font-family:'Inter',sans-serif; gap:18px; padding:22px 0 48px;
+}
+.controls { display:flex; gap:12px; align-items:center; }
+.controls button { background:#1a2035; border:1px solid #ffffff15; color:#fff; padding:8px 20px; border-radius:8px; cursor:pointer; font-family:'Inter',sans-serif; font-size:13px; }
+.controls button:hover { background:#252d45; }
+#ctr { font-size:13px; color:#ffffff50; }
+.slide-wrapper { width:540px; height:540px; position:relative; overflow:hidden; border-radius:6px; box-shadow:0 0 60px #6366f115; }
+.slide { width:1080px; height:1080px; position:absolute; top:0; left:0; transform:scale(0.5); transform-origin:top left; display:none; flex-direction:column; overflow:hidden; }
+.slide.active { display:flex; }
+.bg-grid { position:absolute; inset:0; background-image: linear-gradient(rgba(99,102,241,0.035) 1px, transparent 1px), linear-gradient(90deg,rgba(99,102,241,0.035) 1px, transparent 1px); background-size:80px 80px; }
+.bg-glow { position:absolute; border-radius:50%; filter:blur(120px); pointer-events:none; }
+.corner-lines { position:absolute; top:0; right:0; width:200px; height:200px; pointer-events:none; }
+.corner-lines::before { content:''; position:absolute; top:52px; right:0; width:140px; height:1.5px; background:linear-gradient(90deg,transparent,#6366f130); }
+.corner-lines::after  { content:''; position:absolute; top:0; right:52px; width:1.5px; height:140px; background:linear-gradient(180deg,transparent,#6366f130); }
+.si { width:100%; height:100%; padding:80px 84px; display:flex; flex-direction:column; position:relative; z-index:2; }
+.num { position:absolute; top:72px; right:84px; font-size:26px; color:#ffffff18; font-weight:600; letter-spacing:2px; }
+.lbl { font-size:22px; font-weight:700; letter-spacing:3px; text-transform:uppercase; margin-bottom:52px; }
+.bot { position:absolute; bottom:68px; left:84px; right:84px; display:flex; align-items:center; justify-content:space-between; z-index:3; }
+.bot-url { font-size:22px; color:#ffffff25; font-weight:500; }
+.bot-mark { width:68px; height:68px; background:linear-gradient(135deg,#6366f1,#8b5cf6); border-radius:14px; display:flex; align-items:center; justify-content:center; font-size:28px; font-weight:900; color:#fff; box-shadow:0 0 30px #6366f140; }
+
+/* S1 */
+#s1 { background:#0a0d1a; }
+#s1 .lbl { color:#818cf8; }
+.s1-tag { display:inline-flex; align-items:center; gap:10px; background:#6366f110; border:1.5px solid #6366f125; color:#818cf8; font-size:26px; font-weight:700; padding:12px 24px; border-radius:40px; margin-bottom:40px; width:fit-content; }
+.s1-hook { font-size:90px; font-weight:900; color:#fff; line-height:1.02; margin-bottom:auto; }
+.s1-hook em { color:#8b5cf6; font-style:normal; }
+.s1-sub { font-size:34px; color:#ffffff40; font-weight:500; line-height:1.4; padding-bottom:116px; }
+
+/* S2 — Velocidad */
+#s2 { background:#0a0d1a; }
+#s2 .lbl { color:#f97316; }
+.err-badge { display:inline-flex; align-items:center; gap:10px; background:#f9731615; border:1.5px solid #f9731630; color:#f97316; font-size:24px; font-weight:800; padding:10px 24px; border-radius:10px; margin-bottom:36px; width:fit-content; letter-spacing:1px; }
+.etitle { font-size:72px; font-weight:900; color:#fff; line-height:1.05; margin-bottom:40px; }
+.etitle em { color:#f97316; font-style:normal; }
+.s2-meter { background:#0e1524; border:1.5px solid #ffffff08; border-radius:20px; padding:40px 44px; margin-bottom:32px; }
+.s2-bar-label { display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; }
+.s2-bar-label span { font-size:24px; font-weight:600; color:#ffffff60; }
+.s2-bar-label strong { font-size:28px; font-weight:900; }
+.s2-bar { height:20px; border-radius:10px; margin-bottom:22px; }
+.s2-stat { font-size:30px; color:#ffffffa0; font-weight:500; line-height:1.3; }
+.s2-stat b { color:#fff; font-weight:800; }
+
+/* S3 — Mobile */
+#s3 { background:#0a0d1a; }
+#s3 .lbl { color:#f97316; }
+.s3-phones { display:flex; gap:32px; flex:1; padding-bottom:120px; }
+.s3-phone { flex:1; background:#0e1524; border:1.5px solid #ffffff0c; border-radius:24px; padding:36px 32px; display:flex; flex-direction:column; gap:18px; }
+.s3-phone.bad  { border-color:#ff444420; }
+.s3-phone.good { border-color:#6366f130; box-shadow:0 0 30px #6366f110; }
+.s3-phone-label { font-size:22px; font-weight:700; letter-spacing:1px; text-transform:uppercase; }
+.s3-phone.bad  .s3-phone-label { color:#ff4444; }
+.s3-phone.good .s3-phone-label { color:#818cf8; }
+.s3-broken { display:flex; flex-direction:column; gap:6px; }
+.s3-br { height:26px; border-radius:4px; background:#1a2030; }
+.s3-br.ov { width:175%; margin-left:-40%; background:#ff444418; border:1px solid #ff444430; }
+.s3-clean { display:flex; flex-direction:column; gap:8px; }
+.s3-cl { height:24px; border-radius:4px; background:#1a2845; }
+.s3-phone-desc { font-size:23px; font-weight:500; line-height:1.35; }
+.s3-phone.bad  .s3-phone-desc { color:#ff444480; }
+.s3-phone.good .s3-phone-desc { color:#ffffffa0; }
+
+/* S4 — CTA */
+#s4 { background:#0a0d1a; }
+#s4 .lbl { color:#f97316; }
+.s4-compare { display:flex; flex-direction:column; gap:20px; flex:1; padding-bottom:120px; }
+.s4-row { display:flex; align-items:center; gap:24px; background:#0e1524; border:1.5px solid #ffffff08; border-radius:18px; padding:28px 32px; }
+.s4-row.bad  { border-color:#ff444415; }
+.s4-row.good { border-color:#6366f125; background:#121d38; }
+.s4-row-icon { font-size:40px; flex-shrink:0; }
+.s4-row-content { flex:1; }
+.s4-row-title { font-size:28px; font-weight:800; margin-bottom:6px; }
+.s4-row.bad  .s4-row-title { color:#ff444480; }
+.s4-row.good .s4-row-title { color:#818cf8; }
+.s4-row-desc { font-size:23px; font-weight:500; line-height:1.3; }
+.s4-row.bad  .s4-row-desc { color:#ffffff35; }
+.s4-row.good .s4-row-desc { color:#ffffffa0; }
+.s4-tag { font-size:19px; font-weight:700; padding:6px 16px; border-radius:30px; flex-shrink:0; }
+.s4-row.bad  .s4-tag { background:#ff000015; color:#ff4444; }
+.s4-row.good .s4-tag { background:#6366f120; color:#818cf8; }
+
+/* S5 — Checklist */
+#s5 { background:#0a0d1a; }
+#s5 .lbl { color:#818cf8; }
+.s5-title { font-size:68px; font-weight:900; color:#fff; line-height:1.05; margin-bottom:44px; }
+.s5-title em { color:#818cf8; font-style:normal; }
+.s5-list { display:flex; flex-direction:column; gap:22px; flex:1; padding-bottom:120px; }
+.s5-item { display:flex; align-items:center; gap:26px; background:#0e1524; border:1.5px solid #ffffff08; border-radius:18px; padding:28px 32px; }
+.s5-item.done { border-color:#6366f125; background:#121d38; }
+.s5-item.fail { border-color:#ff444415; opacity:0.5; }
+.s5-check { width:48px; height:48px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:24px; font-weight:900; flex-shrink:0; }
+.s5-item.done .s5-check { background:#6366f120; color:#818cf8; border:2px solid #6366f140; }
+.s5-item.fail .s5-check { background:#ff000015; color:#ff4444; border:2px solid #ff444430; }
+.s5-item-text { font-size:28px; font-weight:700; }
+.s5-item.done .s5-item-text { color:#fff; }
+.s5-item.fail .s5-item-text { color:#ffffff40; text-decoration:line-through; text-decoration-color:#ff444450; }
+
+/* S6 — CTA */
+#s6 { background:#0a0d1a; }
+#s6 .lbl { color:#818cf8; }
+.s6-hl { font-size:96px; font-weight:900; color:#fff; line-height:1.0; margin-bottom:24px; }
+.s6-hl em { color:#6366f1; font-style:normal; }
+.s6-sub { font-size:36px; font-weight:500; color:#ffffff65; margin-bottom:48px; line-height:1.4; }
+.s6-features { display:flex; gap:18px; margin-bottom:48px; }
+.s6-feat { background:#0e1524; border:1.5px solid #6366f120; border-radius:16px; padding:24px 26px; display:flex; flex-direction:column; gap:8px; flex:1; }
+.s6-feat-icon { font-size:30px; }
+.s6-feat-text { font-size:22px; font-weight:700; color:#fff; }
+.s6-btn { display:inline-flex; align-items:center; gap:16px; background:linear-gradient(135deg,#6366f1,#8b5cf6); color:#fff; font-size:36px; font-weight:800; padding:30px 54px; border-radius:20px; width:fit-content; box-shadow:0 8px 40px #6366f145; }
+</style>
+</head>
+<body>
+
+<div class="controls">
+  <button onclick="prev()">← Anterior</button>
+  <span id="ctr">1 / 6</span>
+  <button onclick="next()">Siguiente →</button>
+  <button onclick="downloadSlide()" style="background:linear-gradient(135deg,#6366f1,#8b5cf6);border:none;font-weight:700;">⬇ Descargar slide</button>
+  <button onclick="downloadAll()" style="background:#1a2035;border:1px solid #6366f140;font-weight:600;">⬇ Descargar todos</button>
+</div>
+
+<!-- S1 -->
+<div class="slide-wrapper">
+<div class="slide active" id="s1">
+  <div class="bg-grid"></div>
+  <div class="bg-glow" style="width:700px;height:500px;background:#6366f1;opacity:0.07;top:-120px;left:-100px;"></div>
+  <div class="bg-glow" style="width:400px;height:400px;background:#8b5cf6;opacity:0.05;bottom:-60px;right:-60px;"></div>
+  <div class="corner-lines"></div>
+  <div class="si">
+    <div class="num">01 / 06</div>
+    <div class="lbl">El problema oculto</div>
+    <div class="s1-tag">⚡ Para los que ya tienen web</div>
+    <div class="s1-hook">Tenés web.<br/>Pero no llega<br/><em>ningún cliente.</em></div>
+    <div class="s1-sub">No es mala suerte.<br/>Son 3 errores muy comunes.</div>
+    <div class="bot"><span class="bot-url">@webdesigner.ar</span><div class="bot-mark">S</div></div>
+  </div>
+</div>
+</div>
+
+<!-- S2 -->
+<div class="slide-wrapper" style="display:none" id="w2">
+<div class="slide" id="s2">
+  <div class="bg-grid"></div>
+  <div class="bg-glow" style="width:500px;height:400px;background:#f97316;opacity:0.05;top:-60px;right:-80px;"></div>
+  <div class="corner-lines"></div>
+  <div class="si">
+    <div class="num">02 / 06</div>
+    <div class="lbl">Error #1</div>
+    <div class="err-badge">🐌 VELOCIDAD</div>
+    <div class="etitle">Tarda más de<br/><em>3 segundos.</em></div>
+    <div class="s2-meter">
+      <div class="s2-bar-label"><span>Web sin optimizar</span><strong style="color:#f97316">+7 seg ❌</strong></div>
+      <div class="s2-bar" style="width:100%;background:linear-gradient(90deg,#f9731640,#f97316);"></div>
+      <div class="s2-bar-label"><span>Web optimizada</span><strong style="color:#6366f1">1.2 seg ✓</strong></div>
+      <div class="s2-bar" style="width:18%;background:linear-gradient(90deg,#6366f1,#8b5cf6);"></div>
+    </div>
+    <div class="s2-stat"><b>El 53% de los usuarios</b> abandona<br/>si tarda más de 3 segundos.</div>
+    <div class="bot"><span class="bot-url">@webdesigner.ar</span><div class="bot-mark">S</div></div>
+  </div>
+</div>
+</div>
+
+<!-- S3 -->
+<div class="slide-wrapper" style="display:none" id="w3">
+<div class="slide" id="s3">
+  <div class="bg-grid"></div>
+  <div class="bg-glow" style="width:500px;height:400px;background:#f97316;opacity:0.05;bottom:-60px;left:-80px;"></div>
+  <div class="corner-lines"></div>
+  <div class="si">
+    <div class="num">03 / 06</div>
+    <div class="lbl">Error #2</div>
+    <div class="err-badge">📱 MOBILE</div>
+    <div class="etitle">No se ve bien<br/><em>en el celular.</em></div>
+    <div class="s3-phones">
+      <div class="s3-phone bad">
+        <div class="s3-phone-label">Sin adaptar</div>
+        <div class="s3-broken">
+          <div class="s3-br ov"></div>
+          <div class="s3-br" style="width:60%"></div>
+          <div class="s3-br ov" style="margin-top:8px"></div>
+          <div class="s3-br" style="width:40%"></div>
+          <div class="s3-br ov"></div>
+        </div>
+        <div class="s3-phone-desc">El texto se sale, los botones no funcionan. El cliente cierra y se va.</div>
+      </div>
+      <div class="s3-phone good">
+        <div class="s3-phone-label">Mobile-first</div>
+        <div class="s3-clean">
+          <div class="s3-cl" style="width:80%"></div>
+          <div class="s3-cl" style="width:95%"></div>
+          <div class="s3-cl" style="width:70%"></div>
+          <div class="s3-cl" style="width:90%;background:#6366f130;height:38px;border-radius:8px;margin-top:8px;"></div>
+        </div>
+        <div class="s3-phone-desc">Todo en su lugar. El cliente navega fácil y te contacta.</div>
+      </div>
+    </div>
+    <div class="bot"><span class="bot-url">@webdesigner.ar</span><div class="bot-mark">S</div></div>
+  </div>
+</div>
+</div>
+
+<!-- S4 -->
+<div class="slide-wrapper" style="display:none" id="w4">
+<div class="slide" id="s4">
+  <div class="bg-grid"></div>
+  <div class="bg-glow" style="width:500px;height:400px;background:#6366f1;opacity:0.06;bottom:-60px;right:-60px;"></div>
+  <div class="corner-lines"></div>
+  <div class="si">
+    <div class="num">04 / 06</div>
+    <div class="lbl">Error #3</div>
+    <div class="err-badge">🎯 LLAMADO A LA ACCIÓN</div>
+    <div class="etitle">No les decís<br/><em>qué hacer.</em></div>
+    <div class="s4-compare">
+      <div class="s4-row bad">
+        <div class="s4-row-icon">😕</div>
+        <div class="s4-row-content">
+          <div class="s4-row-title">Sin botón claro</div>
+          <div class="s4-row-desc">El cliente mira, no sabe qué hacer y se va.</div>
+        </div>
+        <div class="s4-tag">❌ Pierde</div>
+      </div>
+      <div class="s4-row good">
+        <div class="s4-row-icon">✅</div>
+        <div class="s4-row-content">
+          <div class="s4-row-title">Botón WhatsApp visible</div>
+          <div class="s4-row-desc">Un clic y ya te está escribiendo.</div>
+        </div>
+        <div class="s4-tag">✓ Convierte</div>
+      </div>
+      <div class="s4-row good">
+        <div class="s4-row-icon">📍</div>
+        <div class="s4-row-content">
+          <div class="s4-row-title">Dirección y horarios claros</div>
+          <div class="s4-row-desc">Sabe dónde encontrarte sin buscar más.</div>
+        </div>
+        <div class="s4-tag">✓ Convierte</div>
+      </div>
+    </div>
+    <div class="bot"><span class="bot-url">@webdesigner.ar</span><div class="bot-mark">S</div></div>
+  </div>
+</div>
+</div>
+
+<!-- S5 -->
+<div class="slide-wrapper" style="display:none" id="w5">
+<div class="slide" id="s5">
+  <div class="bg-grid"></div>
+  <div class="bg-glow" style="width:700px;height:600px;background:#6366f1;opacity:0.06;top:50%;left:50%;transform:translate(-50%,-50%);"></div>
+  <div class="corner-lines"></div>
+  <div class="si">
+    <div class="num">05 / 06</div>
+    <div class="lbl">El diagnóstico</div>
+    <div class="s5-title">¿Tu web<br/><em>los tiene todos?</em></div>
+    <div class="s5-list">
+      <div class="s5-item done"><div class="s5-check">✓</div><div class="s5-item-text">Carga en menos de 2 segundos</div></div>
+      <div class="s5-item done"><div class="s5-check">✓</div><div class="s5-item-text">Se ve perfecta en celular</div></div>
+      <div class="s5-item done"><div class="s5-check">✓</div><div class="s5-item-text">Botón WhatsApp siempre visible</div></div>
+      <div class="s5-item done"><div class="s5-check">✓</div><div class="s5-item-text">Aparece en Google Maps</div></div>
+      <div class="s5-item fail"><div class="s5-check">✗</div><div class="s5-item-text">Web genérica sin identidad propia</div></div>
+    </div>
+    <div class="bot"><span class="bot-url">@webdesigner.ar</span><div class="bot-mark">S</div></div>
+  </div>
+</div>
+</div>
+
+<!-- S6 -->
+<div class="slide-wrapper" style="display:none" id="w6">
+<div class="slide" id="s6">
+  <div class="bg-grid"></div>
+  <div class="bg-glow" style="width:900px;height:700px;background:#6366f1;opacity:0.08;top:50%;left:50%;transform:translate(-50%,-50%);"></div>
+  <div class="corner-lines"></div>
+  <div class="si">
+    <div class="num">06 / 06</div>
+    <div class="lbl">La solución</div>
+    <div class="s6-hl">Una web que<br/><em>convierte.</em></div>
+    <div class="s6-sub">No solo "estar online".<br/>Una web que trabaja para traerte clientes.</div>
+    <div class="s6-features">
+      <div class="s6-feat"><div class="s6-feat-icon">⚡</div><div class="s6-feat-text">Ultra rápida</div></div>
+      <div class="s6-feat"><div class="s6-feat-icon">📱</div><div class="s6-feat-text">Mobile-first</div></div>
+      <div class="s6-feat"><div class="s6-feat-icon">💬</div><div class="s6-feat-text">WhatsApp integrado</div></div>
+      <div class="s6-feat"><div class="s6-feat-icon">📍</div><div class="s6-feat-text">Google optimizado</div></div>
+    </div>
+    <div class="s6-btn">💬 &nbsp;Escribime por WhatsApp</div>
+    <div class="bot"><span class="bot-url">@webdesigner.ar</span><div class="bot-mark">S</div></div>
+  </div>
+</div>
+</div>
+
+<script>
+const total = 6;
+let cur = 1;
+function show(n) {
+  document.querySelectorAll('.slide').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.slide-wrapper').forEach(w => w.style.display = 'none');
+  const w = n === 1 ? document.querySelector('.slide-wrapper') : document.getElementById('w'+n);
+  w.style.display = 'block';
+  document.getElementById('s'+n).classList.add('active');
+  document.getElementById('ctr').textContent = n + ' / ' + total;
+  cur = n;
+}
+function next() { if (cur < total) show(cur + 1); }
+function prev() { if (cur > 1) show(cur - 1); }
+document.querySelector('.slide-wrapper').style.display = 'block';
+
+async function captureSlide(n) {
+  show(n);
+  await new Promise(r => setTimeout(r, 150));
+  const slide = document.getElementById('s' + n);
+  slide.style.transform = 'none';
+  slide.style.position = 'fixed';
+  slide.style.top = '0'; slide.style.left = '0'; slide.style.zIndex = '9999';
+  await new Promise(r => setTimeout(r, 120));
+  const canvas = await html2canvas(slide, { width:1080, height:1080, scale:1, useCORS:true, allowTaint:true, backgroundColor:'#0a0d1a', logging:false });
+  slide.style.transform = ''; slide.style.position = ''; slide.style.top = ''; slide.style.left = ''; slide.style.zIndex = '';
+  return { canvas, n };
+}
+async function downloadSlide() {
+  const { canvas, n } = await captureSlide(cur);
+  const a = document.createElement('a');
+  a.download = 'carousel3-slide-0'+n+'.png';
+  a.href = canvas.toDataURL('image/png'); a.click();
+}
+async function downloadAll() {
+  const btn = event.target;
+  btn.textContent = 'Descargando...'; btn.disabled = true;
+  for (let i = 1; i <= total; i++) {
+    const { canvas } = await captureSlide(i);
+    const a = document.createElement('a');
+    a.download = 'carousel3-slide-0'+i+'.png';
+    a.href = canvas.toDataURL('image/png'); a.click();
+    await new Promise(r => setTimeout(r, 400));
+  }
+  btn.textContent = '⬇ Descargar todos'; btn.disabled = false; show(1);
+}
+</script>
+</body>
+</html>

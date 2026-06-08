@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<title>Carousel 2 — Santiago Web Designer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+  background:#03040a;
+  display:flex; flex-direction:column;
+  align-items:center; min-height:100vh;
+  font-family:'Inter',sans-serif;
+  gap:18px; padding:22px 0 48px;
+}
+.controls { display:flex; gap:12px; align-items:center; }
+.controls button {
+  background:#1a2035; border:1px solid #ffffff15;
+  color:#fff; padding:8px 20px; border-radius:8px;
+  cursor:pointer; font-family:'Inter',sans-serif; font-size:13px;
+}
+.controls button:hover { background:#252d45; }
+#ctr { font-size:13px; color:#ffffff50; }
+
+.slide-wrapper {
+  width:540px; height:540px;
+  position:relative; overflow:hidden;
+  border-radius:6px; box-shadow:0 0 60px #6366f115;
+}
+.slide {
+  width:1080px; height:1080px;
+  position:absolute; top:0; left:0;
+  transform:scale(0.5); transform-origin:top left;
+  display:none; flex-direction:column; overflow:hidden;
+}
+.slide.active { display:flex; }
+
+.bg-grid {
+  position:absolute; inset:0;
+  background-image:
+    linear-gradient(rgba(99,102,241,0.04) 1px, transparent 1px),
+    linear-gradient(90deg,rgba(99,102,241,0.04) 1px, transparent 1px);
+  background-size:80px 80px;
+}
+.bg-glow {
+  position:absolute; border-radius:50%;
+  filter:blur(120px); pointer-events:none;
+}
+.corner-lines { position:absolute; top:0; right:0; width:200px; height:200px; pointer-events:none; }
+.corner-lines::before {
+  content:''; position:absolute; top:52px; right:0;
+  width:140px; height:1.5px;
+  background:linear-gradient(90deg,transparent,#6366f130);
+}
+.corner-lines::after {
+  content:''; position:absolute; top:0; right:52px;
+  width:1.5px; height:140px;
+  background:linear-gradient(180deg,transparent,#6366f130);
+}
+.si {
+  width:100%; height:100%; padding:80px 84px;
+  display:flex; flex-direction:column;
+  position:relative; z-index:2;
+}
+.num { position:absolute; top:72px; right:84px; font-size:26px; color:#ffffff18; font-weight:600; letter-spacing:2px; }
+.lbl { font-size:22px; font-weight:700; letter-spacing:3px; text-transform:uppercase; margin-bottom:56px; }
+.bot {
+  position:absolute; bottom:68px; left:84px; right:84px;
+  display:flex; align-items:center; justify-content:space-between; z-index:3;
+}
+.bot-url { font-size:22px; color:#ffffff25; font-weight:500; }
+.bot-mark {
+  width:68px; height:68px;
+  background:linear-gradient(135deg,#6366f1,#8b5cf6);
+  border-radius:14px; display:flex; align-items:center;
+  justify-content:center; font-size:28px; font-weight:900; color:#fff;
+  box-shadow:0 0 30px #6366f140;
+}
+
+/* S1 */
+#s1 { background:#0a0d1a; }
+#s1 .lbl { color:#f97316; }
+.s1-eyebrow { font-size:30px; font-weight:600; color:#f9731670; letter-spacing:1px; margin-bottom:32px; }
+.s1-hook { font-size:88px; font-weight:900; color:#fff; line-height:1.02; max-width:900px; margin-bottom:auto; }
+.s1-hook em { color:#f97316; font-style:normal; }
+.s1-sub { font-size:32px; color:#ffffff40; font-weight:500; padding-bottom:116px; }
+
+/* S2 */
+#s2 { background:#0a0d1a; }
+#s2 .lbl { color:#818cf8; }
+.s2-q { font-size:50px; font-weight:700; color:#ffffffa0; line-height:1.3; margin-bottom:36px; }
+.s2-q b { color:#fff; }
+.s2-scenario { background:#0e1524; border:1.5px solid #ffffff0a; border-radius:24px; padding:44px 48px; }
+.s2-search {
+  background:#141f38; border:1.5px solid #6366f120;
+  border-radius:14px; padding:20px 26px;
+  display:flex; align-items:center; gap:18px; margin-bottom:26px;
+}
+.s2-search-icon { font-size:30px; }
+.s2-search-text { font-size:34px; font-weight:700; color:#fff; }
+.s2-search-text span { color:#818cf8; }
+.s2-results { display:flex; flex-direction:column; gap:12px; }
+.s2-result {
+  display:flex; align-items:center; gap:16px;
+  padding:16px 20px; border-radius:10px;
+}
+.s2-result.them { background:#162040; border:1.5px solid #6366f130; }
+.s2-result.you { background:#1a1215; border:1.5px solid #ff000010; opacity:0.5; }
+.s2-dot { width:12px; height:12px; border-radius:50%; flex-shrink:0; }
+.s2-result.them .s2-dot { background:#6366f1; }
+.s2-result.you .s2-dot { background:#ff4444; }
+.s2-result p { font-size:25px; font-weight:600; color:#fff; }
+.s2-result.you p { color:#ffffff60; text-decoration:line-through; }
+.s2-badge { font-size:19px; font-weight:700; padding:5px 14px; border-radius:30px; margin-left:auto; }
+.s2-result.them .s2-badge { background:#6366f120; color:#818cf8; }
+.s2-result.you .s2-badge { background:#ff000010; color:#ff4444; }
+
+/* S3 */
+#s3 { background:#0a0d1a; }
+#s3 .lbl { color:#f97316; }
+.s3-pre { font-size:48px; font-weight:600; color:#ffffffa0; line-height:1.2; margin-bottom:12px; }
+.s3-big { font-size:100px; font-weight:900; color:#fff; line-height:1.0; margin-bottom:32px; }
+.s3-big em { color:#f97316; font-style:normal; }
+.s3-divider { width:90px; height:4px; background:linear-gradient(90deg,#f97316,#f97316bb); border-radius:2px; margin-bottom:42px; box-shadow:0 0 20px #f9731660; }
+.s3-body { font-size:40px; font-weight:500; color:#ffffffb0; line-height:1.35; max-width:840px; }
+.s3-body b { color:#fff; font-weight:800; }
+
+/* S4 */
+#s4 { background:#0a0d1a; }
+#s4 .lbl { color:#818cf8; }
+.s4-hl { font-size:64px; font-weight:900; color:#fff; line-height:1.1; margin-bottom:44px; max-width:680px; }
+.s4-row { display:flex; gap:28px; flex:1; padding-bottom:110px; }
+.s4-col { flex:1; border-radius:26px; padding:44px 38px; display:flex; flex-direction:column; gap:18px; }
+.s4-col.dim { background:#0e1524; border:1.5px solid #ffffff08; }
+.s4-col.lit { background:#131d3a; border:1.5px solid #6366f130; box-shadow:0 0 40px #6366f110; }
+.s4-ctitle { font-size:21px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; }
+.s4-col.dim .s4-ctitle { color:#ff444440; }
+.s4-col.lit .s4-ctitle { color:#818cf8; }
+.s4-cname { font-size:44px; font-weight:900; line-height:1.0; }
+.s4-col.dim .s4-cname { color:#ffffff35; }
+.s4-col.lit .s4-cname { color:#fff; }
+.s4-items { display:flex; flex-direction:column; gap:13px; margin-top:6px; }
+.s4-item { display:flex; align-items:center; gap:14px; font-size:23px; font-weight:500; }
+.s4-col.dim .s4-item { color:#ffffff30; }
+.s4-col.lit .s4-item { color:#ffffffa0; }
+.s4-idot { width:10px; height:10px; border-radius:50%; flex-shrink:0; }
+.s4-col.dim .s4-idot { background:#ff4444; }
+.s4-col.lit .s4-idot { background:#6366f1; box-shadow:0 0 8px #6366f180; }
+
+/* S5 */
+#s5 { background:#0a0d1a; }
+#s5 .lbl { color:#f97316; }
+.s5-intro { font-size:44px; font-weight:600; color:#ffffffa0; line-height:1.3; margin-bottom:40px; max-width:780px; }
+.s5-stat-row { display:flex; gap:22px; margin-bottom:34px; }
+.s5-stat { flex:1; background:#0e1524; border:1.5px solid #ffffff08; border-radius:22px; padding:36px 32px; display:flex; flex-direction:column; gap:10px; }
+.s5-num { font-size:78px; font-weight:900; line-height:1.0; }
+.s5-stat:nth-child(1) .s5-num { color:#f97316; text-shadow:0 0 30px #f9731650; }
+.s5-stat:nth-child(2) .s5-num { color:#6366f1; text-shadow:0 0 30px #6366f150; }
+.s5-stat:nth-child(3) .s5-num { color:#818cf8; text-shadow:0 0 30px #818cf850; }
+.s5-slabel { font-size:23px; font-weight:600; color:#ffffff60; line-height:1.2; }
+.s5-close { font-size:38px; font-weight:700; color:#fff; line-height:1.3; padding-bottom:110px; }
+.s5-close em { color:#f97316; font-style:normal; }
+
+/* S6 */
+#s6 { background:#0a0d1a; }
+#s6 .lbl { color:#818cf8; }
+.s6-hl { font-size:96px; font-weight:900; color:#fff; line-height:1.0; margin-bottom:24px; }
+.s6-hl em { color:#6366f1; font-style:normal; }
+.s6-sub { font-size:36px; font-weight:500; color:#ffffff65; margin-bottom:48px; line-height:1.4; }
+.s6-pill {
+  display:inline-flex; align-items:center; gap:12px;
+  background:#f9731610; border:1.5px solid #f9731628;
+  color:#f97316; font-size:27px; font-weight:700;
+  padding:16px 30px; border-radius:40px;
+  margin-bottom:44px; width:fit-content;
+}
+.s6-btn {
+  display:inline-flex; align-items:center; gap:16px;
+  background:linear-gradient(135deg,#6366f1,#8b5cf6);
+  color:#fff; font-size:36px; font-weight:800;
+  padding:30px 54px; border-radius:20px;
+  margin-bottom:36px; width:fit-content;
+  box-shadow:0 8px 40px #6366f145;
+}
+.s6-handle { font-size:26px; color:#818cf8; font-weight:700; letter-spacing:1px; }
+</style>
+</head>
+<body>
+
+<div class="controls">
+  <button onclick="prev()">← Anterior</button>
+  <span id="ctr">1 / 6</span>
+  <button onclick="next()">Siguiente →</button>
+  <button onclick="downloadSlide()" style="background:linear-gradient(135deg,#6366f1,#8b5cf6);border:none;font-weight:700;">⬇ Descargar slide</button>
+  <button onclick="downloadAll()" style="background:#1a2035;border:1px solid #6366f140;font-weight:600;">⬇ Descargar todos</button>
+</div>
+
+<!-- S1 -->
+<div class="slide-wrapper">
+<div class="slide active" id="s1">
+  <div class="bg-grid"></div>
+  <div class="bg-glow" style="width:600px;height:500px;background:#f97316;opacity:0.05;top:-100px;right:-100px;"></div>
+  <div class="bg-glow" style="width:500px;height:400px;background:#6366f1;opacity:0.05;bottom:-60px;left:-60px;"></div>
+  <div class="corner-lines"></div>
+  <div class="si">
+    <div class="num">01 / 06</div>
+    <div class="lbl">Lo que nadie te dice</div>
+    <div class="s1-eyebrow">⚠ Atención negocios locales</div>
+    <div class="s1-hook">Tu competencia<br/>te está robando<br/>clientes <em>ahora mismo.</em></div>
+    <div class="s1-sub">Y lo peor: ni siquiera lo sabés.</div>
+    <div class="bot"><span class="bot-url">@webdesigner.ar</span><div class="bot-mark">S</div></div>
+  </div>
+</div>
+</div>
+
+<!-- S2 -->
+<div class="slide-wrapper" style="display:none" id="w2">
+<div class="slide" id="s2">
+  <div class="bg-grid"></div>
+  <div class="bg-glow" style="width:500px;height:400px;background:#6366f1;opacity:0.06;top:-80px;left:-80px;"></div>
+  <div class="corner-lines"></div>
+  <div class="si">
+    <div class="num">02 / 06</div>
+    <div class="lbl">Cómo lo hacen</div>
+    <div class="s2-q">Alguien busca<br/><b>"pizza cerca mío"</b> en Google.</div>
+    <div class="s2-scenario">
+      <div class="s2-search">
+        <div class="s2-search-icon">🔍</div>
+        <div class="s2-search-text">pizza cerca de <span>mí</span></div>
+      </div>
+      <div class="s2-results">
+        <div class="s2-result them"><div class="s2-dot"></div><p>Tu competencia — con web</p><div class="s2-badge">✓ Aparece</div></div>
+        <div class="s2-result them"><div class="s2-dot"></div><p>Otra pizzería — con web</p><div class="s2-badge">✓ Aparece</div></div>
+        <div class="s2-result you"><div class="s2-dot"></div><p>Vos — sin web</p><div class="s2-badge">✗ Invisible</div></div>
+      </div>
+    </div>
+    <div class="bot"><span class="bot-url">@webdesigner.ar</span><div class="bot-mark">S</div></div>
+  </div>
+</div>
+</div>
+
+<!-- S3 -->
+<div class="slide-wrapper" style="display:none" id="w3">
+<div class="slide" id="s3">
+  <div class="bg-grid"></div>
+  <div class="bg-glow" style="width:700px;height:500px;background:#f97316;opacity:0.05;top:50%;left:50%;transform:translate(-50%,-50%);"></div>
+  <div class="corner-lines"></div>
+  <div class="si">
+    <div class="num">03 / 06</div>
+    <div class="lbl">El diagnóstico</div>
+    <div class="s3-pre">Sin web sos invisible.</div>
+    <div class="s3-big">Y la invisibilidad<br/>cuesta <em>muy caro.</em></div>
+    <div class="s3-divider"></div>
+    <div class="s3-body">Cada día sin web son<br/><b>clientes reales</b> que van<br/>directo a tu competencia.</div>
+    <div class="bot"><span class="bot-url">@webdesigner.ar</span><div class="bot-mark">S</div></div>
+  </div>
+</div>
+</div>
+
+<!-- S4 -->
+<div class="slide-wrapper" style="display:none" id="w4">
+<div class="slide" id="s4">
+  <div class="bg-grid"></div>
+  <div class="bg-glow" style="width:400px;height:400px;background:#6366f1;opacity:0.07;bottom:-60px;right:-60px;"></div>
+  <div class="corner-lines"></div>
+  <div class="si">
+    <div class="num">04 / 06</div>
+    <div class="lbl">La diferencia real</div>
+    <div class="s4-hl">Tu competencia<br/>vs. vos.</div>
+    <div class="s4-row">
+      <div class="s4-col dim">
+        <div class="s4-ctitle">Sin web</div>
+        <div class="s4-cname">Vos hoy</div>
+        <div class="s4-items">
+          <div class="s4-item"><div class="s4-idot"></div>No aparecés en Google</div>
+          <div class="s4-item"><div class="s4-idot"></div>Sin credibilidad online</div>
+          <div class="s4-item"><div class="s4-idot"></div>Clientes van a otro lado</div>
+          <div class="s4-item"><div class="s4-idot"></div>Solo boca en boca</div>
+        </div>
+      </div>
+      <div class="s4-col lit">
+        <div class="s4-ctitle">Con web</div>
+        <div class="s4-cname">Tu meta</div>
+        <div class="s4-items">
+          <div class="s4-item"><div class="s4-idot"></div>Primero en Google local</div>
+          <div class="s4-item"><div class="s4-idot"></div>Confianza inmediata</div>
+          <div class="s4-item"><div class="s4-idot"></div>Clientes te eligen a vos</div>
+          <div class="s4-item"><div class="s4-idot"></div>Ventas 24/7 sin esfuerzo</div>
+        </div>
+      </div>
+    </div>
+    <div class="bot"><span class="bot-url">@webdesigner.ar</span><div class="bot-mark">S</div></div>
+  </div>
+</div>
+</div>
+
+<!-- S5 -->
+<div class="slide-wrapper" style="display:none" id="w5">
+<div class="slide" id="s5">
+  <div class="bg-grid"></div>
+  <div class="bg-glow" style="width:500px;height:300px;background:#f97316;opacity:0.05;top:-40px;right:-80px;"></div>
+  <div class="bg-glow" style="width:400px;height:400px;background:#6366f1;opacity:0.05;bottom:-60px;left:-60px;"></div>
+  <div class="corner-lines"></div>
+  <div class="si">
+    <div class="num">05 / 06</div>
+    <div class="lbl">Los números</div>
+    <div class="s5-intro">¿Cuánto pesa la búsqueda local en Argentina?</div>
+    <div class="s5-stat-row">
+      <div class="s5-stat"><div class="s5-num">97%</div><div class="s5-slabel">busca negocios locales en Google</div></div>
+      <div class="s5-stat"><div class="s5-num">76%</div><div class="s5-slabel">visita el negocio ese mismo día</div></div>
+      <div class="s5-stat"><div class="s5-num">0</div><div class="s5-slabel">clientes si no te encuentran</div></div>
+    </div>
+    <div class="s5-close">Sin web, estás regalando<br/>ese tráfico a tu <em>competencia.</em></div>
+    <div class="bot"><span class="bot-url">@webdesigner.ar</span><div class="bot-mark">S</div></div>
+  </div>
+</div>
+</div>
+
+<!-- S6 -->
+<div class="slide-wrapper" style="display:none" id="w6">
+<div class="slide" id="s6">
+  <div class="bg-grid"></div>
+  <div class="bg-glow" style="width:900px;height:700px;background:#6366f1;opacity:0.07;top:50%;left:50%;transform:translate(-50%,-50%);"></div>
+  <div class="corner-lines"></div>
+  <div class="si">
+    <div class="num">06 / 06</div>
+    <div class="lbl">La solución</div>
+    <div class="s6-hl">Dejá de<br/>regalar<br/><em>clientes.</em></div>
+    <div class="s6-sub">Tu web lista en menos de 7 días.<br/>Aparecés en Google desde el día 1.</div>
+    <div class="s6-pill">🎯 &nbsp;Solo negocios locales en Argentina</div>
+    <div class="s6-btn">💬 &nbsp;Escribime por WhatsApp</div>
+    <div class="s6-handle">@webdesigner.ar · Santiago Web Designer</div>
+    <div class="bot"><span class="bot-url">@webdesigner.ar</span><div class="bot-mark">S</div></div>
+  </div>
+</div>
+</div>
+
+<script>
+const total = 6;
+let cur = 1;
+function show(n) {
+  document.querySelectorAll('.slide').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.slide-wrapper').forEach(w => w.style.display = 'none');
+  const w = n === 1 ? document.querySelector('.slide-wrapper') : document.getElementById('w'+n);
+  w.style.display = 'block';
+  document.getElementById('s'+n).classList.add('active');
+  document.getElementById('ctr').textContent = n + ' / ' + total;
+  cur = n;
+}
+function next() { if (cur < total) show(cur + 1); }
+function prev() { if (cur > 1) show(cur - 1); }
+document.querySelector('.slide-wrapper').style.display = 'block';
+
+async function captureSlide(n) {
+  show(n);
+  await new Promise(r => setTimeout(r, 150));
+  const slide = document.getElementById('s' + n);
+
+  slide.style.transform = 'none';
+  slide.style.position = 'fixed';
+  slide.style.top = '0';
+  slide.style.left = '0';
+  slide.style.zIndex = '9999';
+  await new Promise(r => setTimeout(r, 120));
+
+  const canvas = await html2canvas(slide, {
+    width: 1080, height: 1080, scale: 1,
+    useCORS: true, allowTaint: true,
+    backgroundColor: '#0a0d1a', logging: false
+  });
+
+  slide.style.transform = '';
+  slide.style.position = '';
+  slide.style.top = '';
+  slide.style.left = '';
+  slide.style.zIndex = '';
+
+  return { canvas, n };
+}
+async function downloadSlide() {
+  const { canvas, n } = await captureSlide(cur);
+  const a = document.createElement('a');
+  a.download = 'carousel2-slide-0'+n+'.png';
+  a.href = canvas.toDataURL('image/png');
+  a.click();
+}
+async function downloadAll() {
+  const btn = event.target;
+  btn.textContent = 'Descargando...'; btn.disabled = true;
+  for (let i = 1; i <= total; i++) {
+    const { canvas } = await captureSlide(i);
+    const a = document.createElement('a');
+    a.download = 'carousel2-slide-0'+i+'.png';
+    a.href = canvas.toDataURL('image/png');
+    a.click();
+    await new Promise(r => setTimeout(r, 400));
+  }
+  btn.textContent = '⬇ Descargar todos'; btn.disabled = false;
+  show(1);
+}
+</script>
+</body>
+</html>
