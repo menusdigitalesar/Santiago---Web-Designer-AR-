@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import { cn } from "@/lib/utils";
 
 interface GooeyTextProps {
@@ -19,7 +19,7 @@ export function GooeyText({
 }: GooeyTextProps) {
   const text1Ref = useRef<SVGTextElement>(null);
   const text2Ref = useRef<SVGTextElement>(null);
-  const [textIndex, setTextIndex] = useState(0);
+  const textIndexRef = useRef(0);
   const morphRef = useRef(0);
   const cooldownRef = useRef(0);
   const timeRef = useRef(Date.now());
@@ -36,8 +36,8 @@ export function GooeyText({
       const f2 = 1 - fraction;
       t1.style.filter = `blur(${Math.min(8 / f2 - 8, 100)}px)`;
       t1.style.opacity = `${Math.pow(f2, 0.4) * 100}%`;
-      t1.textContent = texts[textIndex % texts.length];
-      t2.textContent = texts[(textIndex + 1) % texts.length];
+      t1.textContent = texts[textIndexRef.current % texts.length];
+      t2.textContent = texts[(textIndexRef.current + 1) % texts.length];
     }
 
     function doCooldown() {
@@ -60,18 +60,16 @@ export function GooeyText({
       cooldownRef.current -= dt;
       if (cooldownRef.current <= 0) {
         if (morphRef.current === 0) {
-          setTextIndex((i) => {
-            const next = (i + 1) % texts.length;
-            if (text1Ref.current) text1Ref.current.textContent = texts[i];
-            if (text2Ref.current) text2Ref.current.textContent = texts[next];
-            return i;
-          });
+          const i = textIndexRef.current;
+          const next = (i + 1) % texts.length;
+          if (text1Ref.current) text1Ref.current.textContent = texts[i];
+          if (text2Ref.current) text2Ref.current.textContent = texts[next];
         }
         morphRef.current += dt;
         if (morphRef.current >= morphTime) {
           cooldownRef.current = cooldownTime;
           morphRef.current = 0;
-          setTextIndex((i) => (i + 1) % texts.length);
+          textIndexRef.current = (textIndexRef.current + 1) % texts.length;
         } else {
           setMorph(morphRef.current / morphTime);
         }
@@ -84,7 +82,7 @@ export function GooeyText({
     if (text2Ref.current) text2Ref.current.textContent = texts[1];
     animId = requestAnimationFrame(animate);
     return () => cancelAnimationFrame(animId);
-  }, [texts, morphTime, cooldownTime, textIndex]);
+  }, [texts, morphTime, cooldownTime]);
 
   return (
     <div className={cn("relative flex items-center justify-center", className)}>
