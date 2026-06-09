@@ -37,6 +37,54 @@ const PROJECTS = [
     screenshot: "/portfolio/burgaloversproyecto4.jpg",
     tag: "Gastronomia",
   },
+  {
+    name: "El Picadero",
+    category: "Restaurante",
+    description: "Picadas abundantes, hamburguesas artesanales y cervezas bien frías en un ambiente ideal para compartir con amigos y familia.",
+    url: "https://elpicadero-menudemo.lovable.app",
+    screenshot: "/portfolio/elpicaderoproyecto5.jpg",
+    tag: "Gastronomia",
+  },
+  {
+    name: "Sensei Sushi",
+    category: "Sushi",
+    description: "Disfrutá de rolls premium, combinaciones exclusivas y la máxima frescura en cada bocado.",
+    url: "https://senseisushi-menudemo.lovable.app",
+    screenshot: "/portfolio/senseisushiproyecto6.jpg",
+    tag: "Gastronomia",
+  },
+  {
+    name: "Salud Y Estética MG",
+    category: "Salud y Estética",
+    description: "Especialistas en salud y estética, ofreciendo tratamientos personalizados para cuidar tu bienestar, confianza y belleza natural.",
+    url: "https://saludyesteticamg-demo.lovable.app/",
+    screenshot: "/portfolio/saludyesteticaproyecto7.jpg",
+    tag: "Salud",
+  },
+  {
+    name: "Sabores del Chiringuito",
+    category: "Restaurante",
+    description: "Sabores únicos, porciones abundantes y el ambiente ideal para compartir buenos momentos.",
+    url: "https://saboresdelchiringuito-menudemo.lovable.app",
+    screenshot: "/portfolio/chiringuitoproyecto8.jpg",
+    tag: "Gastronomia",
+  },
+  {
+    name: "La Posta",
+    category: "Restaurante",
+    description: "Comida casera, porciones abundantes y sabores tradicionales para disfrutar todos los días.",
+    url: "https://la-posta-digital-menudemo.lovable.app/",
+    screenshot: "/portfolio/lapostaproyecto9.jpg",
+    tag: "Gastronomia",
+  },
+  {
+    name: "El Sazón Venezolano",
+    category: "Restaurante Venezolano",
+    description: "Sabores auténticos de Venezuela, preparados con recetas tradicionales e ingredientes seleccionados.",
+    url: "https://el-sazon-venezolano-menu-demo.lovable.app/",
+    screenshot: "/portfolio/elsazonproyecto10.jpg",
+    tag: "Gastronomia",
+  },
 ];
 
 const GRADIENTS = [
@@ -154,12 +202,19 @@ function ProjectCard({ project, index }: { project: (typeof PROJECTS)[0]; index:
   );
 }
 
+const INITIAL_COUNT = 4;
+
 export function PortfolioSection() {
   const [mounted, setMounted] = useState(false);
+  const [showAll, setShowAll] = useState(false);
+
   useEffect(() => {
     const t = setTimeout(() => setMounted(true), 400);
     return () => clearTimeout(t);
   }, []);
+
+  const visibleProjects = showAll ? PROJECTS : PROJECTS.slice(0, INITIAL_COUNT);
+  const hiddenCount = PROJECTS.length - INITIAL_COUNT;
 
   return (
     <section id="portfolio" className="relative bg-[#030712] py-28 px-4 overflow-hidden">
@@ -189,19 +244,42 @@ export function PortfolioSection() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {!mounted
-            ? PROJECTS.map((_, i) => <SkeletonCard key={i} />)
-            : PROJECTS.map((p, i) => <ProjectCard key={p.name} project={p} index={i} />)}
+            ? Array.from({ length: INITIAL_COUNT }).map((_, i) => <SkeletonCard key={i} />)
+            : visibleProjects.map((p, i) => <ProjectCard key={p.name} project={p} index={i} />)}
         </div>
 
-        <motion.p
-          className="text-center font-inter text-slate-600 text-sm mt-10"
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-          transition={{ delay: 0.5 }}
-        >
-          Cada proyecto es unico, disenado y optimizado especificamente para su rubro.
-        </motion.p>
+        {mounted && !showAll && (
+          <motion.div
+            className="flex flex-col items-center gap-3 mt-12"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.3 }}
+          >
+            <button
+              onClick={() => setShowAll(true)}
+              className="inline-flex items-center gap-2 rounded-2xl border border-indigo-500/40 bg-indigo-500/10 px-8 py-3.5 font-inter text-base font-semibold text-indigo-300 hover:bg-indigo-500/20 hover:border-indigo-400/60 hover:text-indigo-200 transition-all duration-300 hover:shadow-[0_0_30px_rgba(99,102,241,0.2)]"
+            >
+              Ver los {hiddenCount} proyectos restantes
+              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+              </svg>
+            </button>
+            <p className="font-inter text-slate-600 text-xs">
+              {PROJECTS.length} proyectos en total
+            </p>
+          </motion.div>
+        )}
+
+        {mounted && showAll && (
+          <motion.p
+            className="text-center font-inter text-slate-600 text-sm mt-10"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.3 }}
+          >
+            Cada proyecto es único, diseñado y optimizado específicamente para su rubro.
+          </motion.p>
+        )}
       </div>
     </section>
   );
