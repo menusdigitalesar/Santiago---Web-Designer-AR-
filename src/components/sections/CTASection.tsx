@@ -4,8 +4,9 @@ import { MessageCircle } from "lucide-react";
 import { SparklesCore } from "@/components/ui/sparkles";
 import { GradientText } from "@/components/ui/gradient-text";
 
-const WA_LINK = "https://wa.me/5491131791361?text=Hola%20Santiago!%20Quiero%20una%20p%C3%A1gina%20web%20para%20mi%20negocio";
-const IG_LINK = "https://www.instagram.com/menusdigitales.ar/";
+const WA_LINK = "https://wa.me/5491178236625?text=Hola%20Santiago!%20Quiero%20una%20p%C3%A1gina%20web%20para%20mi%20negocio";
+const IG_LINK = "https://www.instagram.com/webdesigner.ar/";
+const FB_LINK = "https://www.facebook.com/people/Santiago-Web-Designer/61590424513054/";
 
 export function CTASection() {
   return (

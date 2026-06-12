@@ -7,7 +7,7 @@ import DisplayCards from "@/components/ui/display-cards";
 import { MessageCircle, Globe, Zap, Shield } from "lucide-react";
 import { SparklesCore } from "@/components/ui/sparkles";
 
-const WA_LINK = "https://wa.me/5491131791361?text=Hola%20Santiago!%20Quiero%20una%20p%C3%A1gina%20web%20para%20mi%20negocio";
+const WA_LINK = "https://wa.me/5491178236625?text=Hola%20Santiago!%20Quiero%20una%20p%C3%A1gina%20web%20para%20mi%20negocio";
 
 const skills = ["Diseño UX/UI", "WhatsApp", "SEO", "Mobile-First"];
 

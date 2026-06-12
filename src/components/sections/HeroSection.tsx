@@ -9,7 +9,7 @@ import { Typewriter } from "@/components/ui/typewriter";
 import { GradientText } from "@/components/ui/gradient-text";
 
 const WA_LINK =
-  "https://wa.me/5491131791361?text=Hola%20Santiago!%20Quiero%20una%20p%C3%A1gina%20web%20para%20mi%20negocio";
+  "https://wa.me/5491178236625?text=Hola%20Santiago!%20Quiero%20una%20p%C3%A1gina%20web%20para%20mi%20negocio";
 
 export function HeroSection() {
   const [mounted, setMounted] = useState(false);

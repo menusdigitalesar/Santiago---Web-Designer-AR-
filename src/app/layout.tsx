@@ -17,7 +17,7 @@ const inter = Inter({
 export const metadata: Metadata = {
   title: "Santiago Web Designer | Páginas Web para Negocios en Argentina",
   description:
-    "Diseño páginas web modernas, rápidas y optimizadas para celular. Para restaurantes, barberías, gimnasios, tiendas y todo tipo de negocio. WhatsApp: 11 3179-1361",
+    "Diseño páginas web modernas, rápidas y optimizadas para celular. Para restaurantes, barberías, gimnasios, tiendas y todo tipo de negocio. WhatsApp: 11 7823-6625",
   keywords: [
     "diseño web argentina",
     "páginas web negocios",

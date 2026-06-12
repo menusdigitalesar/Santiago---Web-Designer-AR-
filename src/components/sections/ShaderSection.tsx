@@ -4,7 +4,7 @@ import { MessageCircle } from "lucide-react";
 import { WebGLShader } from "@/components/ui/webgl-shader";
 import { GradientText } from "@/components/ui/gradient-text";
 
-const WA_LINK = "https://wa.me/5491131791361?text=Hola%20Santiago!%20Quiero%20una%20p%C3%A1gina%20web%20para%20mi%20negocio";
+const WA_LINK = "https://wa.me/5491178236625?text=Hola%20Santiago!%20Quiero%20una%20p%C3%A1gina%20web%20para%20mi%20negocio";
 
 const stats = [
   { value: "+50", label: "webs entregadas", icon: "🌐" },
