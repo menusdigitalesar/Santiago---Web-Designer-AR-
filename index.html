@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Santiago · Web Studio — Diseño web para negocios que quieren crecer</title>
+<meta name="description" content="Diseño webs profesionales para negocios: catálogo, pedidos por WhatsApp y presencia en Google. Te la muestro terminada antes de pagar. Si no te gusta, no pagás nada." />
+<meta name="keywords" content="diseño web, páginas web para negocios, web con WhatsApp, tienda online, diseñador web Argentina, web para restaurantes, web para comercios" />
+<link rel="canonical" href="https://webstudioar.xyz/" />
+<meta name="robots" content="index, follow" />
+<meta property="og:type" content="website" />
+<meta property="og:title" content="Santiago · Web Studio — Diseño web que vende" />
+<meta property="og:description" content="Webs profesionales para negocios. La ves terminada antes de pagar." />
+<meta property="og:locale" content="es_AR" />
+<meta name="theme-color" content="#06070F" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="css/styles.css?v=6" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"ProfessionalService","name":"Santiago · Web Studio","description":"Diseño web profesional para negocios.","url":"https://webstudioar.xyz/","areaServed":"Argentina","serviceType":"Diseño y desarrollo web"}
+</script>
+</head>
+<body>
+
+<!-- LOADER (ezterbial-inspired) -->
+<div class="loader" id="loader">
+  <div class="loader-grid" id="loaderGrid"></div>
+  <div class="loader-inner">
+    <div class="loader-pct" id="loaderPct">0</div>
+    <div class="loader-bar"><div class="loader-fill" id="loaderFill"></div></div>
+  </div>
+</div>
+
+<canvas class="sparkles" id="sparkles" aria-hidden="true"></canvas>
+<canvas class="dots" id="dots" aria-hidden="true"></canvas>
+<div class="aurora" aria-hidden="true"><span data-par="20"></span><span data-par="-16"></span><span data-par="24"></span></div>
+<div class="cursor-glow" id="cursorGlow" aria-hidden="true"></div>
+
+<!-- NAV -->
+<header class="nav" id="nav">
+  <a href="#top" class="brand" data-hov>Santiago<span>·</span>Web<em>Studio</em></a>
+  <nav class="nav-links" id="navLinks">
+    <a href="#servicios" data-hov>Servicios</a>
+    <a href="#trabajos" data-hov>Trabajos</a>
+    <a href="#proceso" data-hov>Cómo trabajo</a>
+    <a href="#planes" data-hov>Planes</a>
+    <a href="#" class="nav-cta" data-hov data-wa="Hola Santiago! Quiero una página web para mi negocio.">Hablemos</a>
+  </nav>
+  <button class="nav-toggle" id="navToggle" aria-label="Menú"><span></span><span></span></button>
+</header>
+
+<!-- HERO -->
+<section class="hero" id="top">
+  <span class="hero-pill" data-hov data-par="8"><span class="dot"></span>Diseño web para negocios · Argentina</span>
+  <h1 class="hero-title" data-par="-14">
+    Tu web que<br>
+    <span class="text-rotate" id="textRotate" aria-label="vende"></span><br>
+    mientras dormís.
+  </h1>
+  <p class="hero-sub" data-par="6">Diseño páginas profesionales para negocios: catálogo, pedidos por WhatsApp y presencia en Google. <b>La ves terminada antes de pagar un solo peso.</b></p>
+  <div class="hero-cta">
+    <a href="#" class="btn-3d" data-hov data-wa="Hola Santiago! Quiero mi página web, me contás?"><span class="btn-3d-top">Quiero mi web gratis</span><span class="btn-3d-shadow"></span></a>
+    <a href="#trabajos" class="btn-3d glass" data-hov><span class="btn-3d-top">Ver trabajos</span><span class="btn-3d-shadow"></span></a>
+  </div>
+  <div class="hero-mini">
+    <div><b data-to="30">0</b><span>+ webs entregadas</span></div>
+    <div><b data-to="100">0</b><span>% enfocado en vos</span></div>
+    <div><b data-to="0">0</b><span>riesgo · pagás si te gusta</span></div>
+  </div>
+</section>
+
+<!-- MARQUEE -->
+<div class="ticker" aria-hidden="true">
+  <div class="ticker-row">
+    <span>Diseño web</span><i>✦</i><span>Tiendas online</span><i>✦</i><span>Pedidos por WhatsApp</span><i>✦</i><span>SEO en Google</span><i>✦</i><span>Branding</span><i>✦</i><span>Landing pages</span><i>✦</i>
+    <span>Diseño web</span><i>✦</i><span>Tiendas online</span><i>✦</i><span>Pedidos por WhatsApp</span><i>✦</i><span>SEO en Google</span><i>✦</i><span>Branding</span><i>✦</i><span>Landing pages</span><i>✦</i>
+  </div>
+</div>
+
+<!-- SHOWCASE (container scroll) -->
+<section class="showcase" id="showcase">
+  <div class="container show-head reveal">
+    <span class="eyebrow">Así de pro queda</span>
+    <h2>Mirá cómo se ve <em>tu web</em></h2>
+  </div>
+  <div class="show-stage" id="showStage">
+    <div class="show-card" id="showCard">
+      <div class="show-bar"><span></span><span></span><span></span><i>tunegocio.com</i></div>
+      <div class="show-screen" id="showScreen">
+        <div class="ss-nav"><b>🍕 La Vera Pizza</b><span>Menú · Ubicación · Pedidos</span></div>
+        <div class="ss-hero">
+          <div class="ss-h1-text">Las mejores pizzas a la piedra</div>
+          <div class="ss-h2-text">📍 Av. Rivadavia 1234, CABA</div>
+          <div class="ss-btn-text">Pedir por WhatsApp</div>
+        </div>
+        <div class="ss-menu" id="ssMenu">
+          <div class="ss-item"><span class="ss-emoji">🍕</span><span class="ss-name">Muzzarella</span><span class="ss-price">$4.500</span></div>
+          <div class="ss-item"><span class="ss-emoji">🍕</span><span class="ss-name">Napolitana</span><span class="ss-price">$5.200</span></div>
+          <div class="ss-item"><span class="ss-emoji">🥟</span><span class="ss-name">Empanadas x6</span><span class="ss-price">$3.800</span></div>
+          <div class="ss-item"><span class="ss-emoji">🍺</span><span class="ss-name">Cerveza artesanal</span><span class="ss-price">$2.500</span></div>
+          <div class="ss-item"><span class="ss-emoji">🥤</span><span class="ss-name">Gaseosa 1.5L</span><span class="ss-price">$1.800</span></div>
+          <div class="ss-item"><span class="ss-emoji">🍰</span><span class="ss-name">Flan casero</span><span class="ss-price">$2.200</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SERVICIOS -->
+<section class="section" id="servicios">
+  <div class="container">
+    <div class="sec-head reveal">
+      <span class="eyebrow">Para cualquier rubro</span>
+      <h2>Trabajo con <em>todo tipo</em> de negocio</h2>
+      <p>No importa el rubro. Si tenés un negocio, te hago la web que necesitás para crecer.</p>
+    </div>
+    <div class="serv-grid" id="servGrid"></div>
+  </div>
+</section>
+
+<!-- POR QUÉ -->
+<section class="section porque" id="porque">
+  <div class="container why-grid">
+    <div class="why-text reveal">
+      <span class="eyebrow">Por qué yo</span>
+      <h2>Sin riesgo.<br><em>Sin vueltas.</em></h2>
+      <p>Te diseño la web completa primero. La ves terminada por WhatsApp y recién ahí decidís. Si te gusta, la subimos online. Si no, no pagás nada.</p>
+      <a href="#" class="btn btn-grad" data-hov data-wa="Hola Santiago! Quiero que me armes una demo gratis de mi web."><span>Pedí tu demo gratis</span></a>
+    </div>
+    <div class="why-cards" id="whyCards"></div>
+  </div>
+</section>
+
+<!-- TRABAJOS -->
+<section class="section" id="trabajos">
+  <div class="container">
+    <div class="sec-head reveal">
+      <span class="eyebrow diamond">P<i class="dia"></i>rtfolio</span>
+      <h2>Algunos <em>trabajos</em> recientes</h2>
+      <p>Webs reales, hechas a medida para cada negocio.</p>
+    </div>
+    <div class="work-grid" id="workGrid"></div>
+  </div>
+</section>
+
+<!-- PROCESO -->
+<section class="section proceso" id="proceso">
+  <div class="container">
+    <div class="sec-head reveal"><span class="eyebrow">Cómo trabajo</span><h2>De la idea a tu web<br>en <em>4 pasos</em></h2></div>
+    <div class="steps" id="steps"></div>
+  </div>
+</section>
+
+<!-- PLANES -->
+<section class="section planes" id="planes">
+  <div class="container">
+    <div class="sec-head reveal">
+      <span class="eyebrow">Planes</span>
+      <h2>Inversión que <em>se paga sola</em></h2>
+      <p>Una web profesional es el mejor vendedor que podés tener. Trabaja 24/7 sin descanso.</p>
+    </div>
+    <div class="plan-grid" id="planGrid"></div>
+    <p class="plan-note">💡 Los precios varían según el proyecto. Escribime y te doy un presupuesto sin cargo.</p>
+  </div>
+</section>
+
+<!-- TESTIMONIOS -->
+<section class="section" id="testimonios">
+  <div class="container">
+    <div class="sec-head reveal"><span class="eyebrow">Clientes</span><h2>Lo que dicen de mí</h2></div>
+    <div class="testi-3d"><div class="testi-col" id="testiColA"></div><div class="testi-col rev" id="testiColB"></div><div class="testi-fade top"></div><div class="testi-fade bottom"></div></div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="section cta" id="contacto">
+  <div class="container cta-in reveal">
+    <h2>¿Armamos <em>tu web</em>?</h2>
+    <p>Escribime por WhatsApp y en minutos empezamos. La demo es gratis y sin compromiso.</p>
+    <a href="#" class="btn-3d lg" data-hov data-wa="Hola Santiago! Quiero empezar con mi página web."><span class="btn-3d-top">Escribime por WhatsApp</span><span class="btn-3d-shadow"></span></a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="container footer-in">
+    <a href="#top" class="brand">Santiago<span>·</span>Web<em>Studio</em></a>
+    <nav class="foot-nav"><a href="#servicios">Servicios</a><a href="#trabajos">Trabajos</a><a href="#planes">Planes</a><a href="#" data-wa="Hola Santiago! Quiero hacer una consulta.">Contacto</a></nav>
+  </div>
+  <div class="footer-base"><div class="container">© <span id="yr"></span> Santiago · Web Studio — Diseño web para negocios que quieren crecer</div></div>
+</footer>
+
+<a href="#" class="wa-float" id="waFloat" aria-label="WhatsApp" data-hov data-wa="Hola Santiago! Quiero una página web para mi negocio.">
+  <svg viewBox="0 0 24 24" fill="currentColor"><path d="M.5 23.5l1.6-5.9A11.4 11.4 0 1 1 12 23.4a11.5 11.5 0 0 1-5.6-1.4L.5 23.5zM6.8 19.9l.3.2a9.5 9.5 0 1 0-3.3-3.5l.2.4-.9 3.4 3.7-.5zM17.5 14.4c-.1-.2-.4-.3-.9-.5s-1.5-.7-1.7-.8-.4-.1-.6.1-.7.8-.8 1-.3.2-.5.1a7.7 7.7 0 0 1-2.3-1.4 8.6 8.6 0 0 1-1.6-2c-.2-.3 0-.4.1-.6l.4-.5.3-.5a.5.5 0 0 0 0-.5l-.8-2c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.3 5.3 0 0 0 1.1 2.8 12 12 0 0 0 4.6 4.1c2.7 1.1 2.7.7 3.2.7a2.7 2.7 0 0 0 1.8-1.3 2.2 2.2 0 0 0 .1-1.3z"/></svg>
+</a>
+
+<script src="js/main.js?v=6"></script>
+</body>
+</html>

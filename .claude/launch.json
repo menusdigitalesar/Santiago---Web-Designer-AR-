@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "santiago-v6",
+      "runtimeExecutable": "python",
+      "runtimeArgs": ["-m", "http.server", "8086"],
+      "port": 8086
+    }
+  ]
+}
